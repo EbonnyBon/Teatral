@@ -19,21 +19,21 @@ sprite_espaldas = pygame.image.load("C:/Users/Ebbony G/OneDrive/Documentos/Palmo
 sprite_derecha = pygame.image.load("C:/Users/Ebbony G/OneDrive/Documentos/Palmore/Programacion 2/Parcial 3/teatral/derecha.png")
 sprite_izquierda = pygame.image.load("C:/Users/Ebbony G/OneDrive/Documentos/Palmore/Programacion 2/Parcial 3/teatral/izquierda.png")
 
-# Ajustar el tamaño de los sprites
-sprite_frente = pygame.transform.scale(sprite_frente, (50, 80))
-sprite_espaldas = pygame.transform.scale(sprite_espaldas, (50, 80))
-sprite_derecha = pygame.transform.scale(sprite_derecha, (50, 80))
-sprite_izquierda = pygame.transform.scale(sprite_izquierda, (50, 80))
+# Ajustar el tamaño de los sprites (ahora más grandes)
+sprite_frente = pygame.transform.scale(sprite_frente, (70, 110))
+sprite_espaldas = pygame.transform.scale(sprite_espaldas, (70, 110))
+sprite_derecha = pygame.transform.scale(sprite_derecha, (70, 110))
+sprite_izquierda = pygame.transform.scale(sprite_izquierda, (70, 110))
 
 # Variables del personaje
 pos_x = ancho // 2  # Posición inicial X (centro de la pantalla)
-pos_y = 450  # Posición inicial Y (en el escenario)
-velocidad = 5  # Velocidad de movimiento
+pos_y = 345  # Posición inicial Y (ajustada al escenario)
+velocidad = 3  # Velocidad de movimiento
 sprite_actual = sprite_frente  # Sprite inicial (mirando al frente)
 
 # Límites del escenario
-limite_izquierdo = 150  # Límite izquierdo
-limite_derecho = 650  # Límite derecho
+limite_izquierdo = 0  # Límite izquierdo (extremo de la pantalla)
+limite_derecho = ancho - 70  # Límite derecho (extremo menos el ancho del personaje)
 
 # Bucle principal
 def bucle_juego():
@@ -47,14 +47,16 @@ def bucle_juego():
 
         # Detectar teclas
         teclas = pygame.key.get_pressed()
-        if teclas[pygame.K_RIGHT] and pos_x < limite_derecho:  # Mover a la derecha
+        if teclas[pygame.K_d] and pos_x < limite_derecho:  # Mover a la derecha
             pos_x += velocidad
             sprite_actual = sprite_derecha
-        elif teclas[pygame.K_LEFT] and pos_x > limite_izquierdo:  # Mover a la izquierda
+        elif teclas[pygame.K_a] and pos_x > limite_izquierdo:  # Mover a la izquierda
             pos_x -= velocidad
             sprite_actual = sprite_izquierda
         else:
             sprite_actual = sprite_frente  # Si no se mueve, mirar al frente
+        if teclas[pygame.K_w]:  # Mirar hacia arriba
+            sprite_actual = sprite_espaldas
 
         # Dibujar todo
         ventana.blit(fondo, (0, 0))  # Dibujar el fondo
