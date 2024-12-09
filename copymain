@@ -16,6 +16,59 @@ pygame.mixer.music.load("C:/Users/Ebbony G/OneDrive/Documentos/Palmore/Programac
 pygame.mixer.music.set_volume(0.5)  # Ajusta el volumen (0.0 a 1.0)
 pygame.mixer.music.play(-1)  # Reproducir en bucle
 
+# Colores
+NEGRO = (0, 0, 0)
+BLANCO = (255, 255, 255)
+ROJO = (255, 0, 0)
+
+# Fuentes
+titulo_fuente = pygame.font.Font(None, 100)
+texto_fuente = pygame.font.Font(None, 40)
+
+# Función para la pantalla de inicio
+def pantalla_inicio():
+    while True:
+        ventana.fill(NEGRO)
+
+        # Dibujar título
+        titulo_texto = titulo_fuente.render("Teatro Misterioso", True, ROJO)
+        ventana.blit(titulo_texto, (ancho // 2 - titulo_texto.get_width() // 2, 150))
+
+        # Dibujar texto inicial
+        texto_inicial = texto_fuente.render("Despiertas desorientado en un teatro vacío...", True, BLANCO)
+        ventana.blit(texto_inicial, (ancho // 2 - texto_inicial.get_width() // 2, 300))
+
+        texto_instrucciones = texto_fuente.render("Presiona Enter para escapar", True, BLANCO)
+        ventana.blit(texto_instrucciones, (ancho // 2 - texto_instrucciones.get_width() // 2, 350))
+
+        pygame.display.flip()
+
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if evento.type == pygame.KEYDOWN and evento.key == pygame.K_RETURN:
+                return
+
+# Función para la pantalla de pausa
+def pantalla_pausa():
+    while True:
+        ventana.fill(NEGRO)
+
+        texto_pausa = titulo_fuente.render("Juego en Pausa", True, BLANCO)
+        texto_instrucciones = texto_fuente.render("Presiona ESC para continuar", True, BLANCO)
+        
+        ventana.blit(texto_pausa, (ancho // 2 - texto_pausa.get_width() // 2, alto // 2 - 50))
+        ventana.blit(texto_instrucciones, (ancho // 2 - texto_instrucciones.get_width() // 2, alto // 2 + 50))
+        
+        pygame.display.flip()
+
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if evento.type == pygame.KEYDOWN and evento.key == pygame.K_ESCAPE:
+                return
 
 # Carga de la imagen de fondo
 fondo1 = pygame.image.load("C:/Users/Ebbony G/OneDrive/Documentos/Palmore/Programacion 2/Parcial 3/teatral/fondo.png")
@@ -71,22 +124,6 @@ pos_objeto_vela = (40, 425)  # En fondo1
 pos_objeto_mascara = (300, 350)  # En fondo2 (camerino)
 pos_objeto_rosa = (450, 350)  # En fondo2 (camerino)
 
-# Colores
-NEGRO = (0, 0, 0)
-BLANCO = (255, 255, 255)
-ROJO = (255, 0, 0)
-
-# Fuentes
-titulo_fuente = pygame.font.Font(None, 100)
-texto_fuente = pygame.font.Font(None, 40)
-
-# Variables del personaje
-pos_x = ancho // 2
-pos_y = 385
-velocidad = 2
-sprite_actual = sprite_frente
-habitacion_actual = 1
-
 # Inventario
 inventario = {
     "mascara": False,
@@ -103,22 +140,21 @@ maniquies_completados = {
 
 # Diálogos y temporizador
 dialogos_objetos = {
-    "mascara": "El telón se abre con la cara de los sueños.",
-    "vela": "La llama marca el final, iluminando el camino de la salida.",
-    "rosa": "El corazón de la escena es rojo como el amor y el dolor."
+    "mascara": "Has recogido la máscara. Parece antigua y misteriosa.",
+    "vela": "Has recogido la vela. Tal vez ilumine un secreto.",
+    "rosa": "Has recogido la rosa. Su fragancia evoca recuerdos."
 }
 
 dialogos_maniquies = {
-    "manmascara": "La verdad se oculta tras una cara. ¿Dónde está la mía? Sin ella, la obra nunca se levantará.",
-    "manrosa": "El corazón de la escena late con pasión, pero algo falta… Un símbolo de amor, de tragedia, de deseo.",
-    "masvela": "Solo en la oscuridad la luz cobra su verdadero significado. La llama es lo único que ilumina el camino hacia la salida."
-
+    "manmascara": "Un maniquí con una máscara... Parece que observa algo.",
+    "manrosa": "Un maniquí sosteniendo una rosa... Tiene un aire melancólico.",
+    "masvela": "Un maniquí con una vela... Parece que ilumina secretos."
 }
 
 dialogos_agradecimiento = {
-    "manmascara": "La verdad se revela. La escena comienza a cobrar vida. Gracias.",
-    "manrosa": "La pasión llena el aire, y el drama comienza. No se como podre pagartelo.",
-    "masvela": "La luz se enciende, iluminando la oscuridad, la función está completa. Ten una buena vida"
+    "manmascara": "Gracias por devolverme la máscara.",
+    "manrosa": "Gracias por traerme la rosa.",
+    "masvela": "Gracias por darme la vela."
 }
 
 texto_actual = ""
@@ -127,95 +163,11 @@ tiempo_mostrar_texto = 0
 # Configuración de fuente
 fuente = pygame.font.Font(None, 30)
 
-# Función para la pantalla de inicio
-def pantalla_inicio():
-    while True:
-        ventana.fill(NEGRO)
-
-        # Dibujar título
-        titulo_texto = titulo_fuente.render("Teatro Misterioso", True, ROJO)
-        ventana.blit(titulo_texto, (ancho // 2 - titulo_texto.get_width() // 2, 150))
-
-        # Dibujar texto inicial
-        texto_inicial = texto_fuente.render("Despiertas desorientado en un teatro vacío...", True, BLANCO)
-        ventana.blit(texto_inicial, (ancho // 2 - texto_inicial.get_width() // 2, 300))
-
-        texto_instrucciones = texto_fuente.render("Presiona Enter para escapar", True, BLANCO)
-        ventana.blit(texto_instrucciones, (ancho // 2 - texto_instrucciones.get_width() // 2, 350))
-
-        pygame.display.flip()
-
-        for evento in pygame.event.get():
-            if evento.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if evento.type == pygame.KEYDOWN and evento.key == pygame.K_RETURN:
-                return
-
-# Función para la pantalla de pausa
-def pantalla_pausa():
-    while True:
-        ventana.fill(NEGRO)
-
-        texto_pausa = titulo_fuente.render("Juego en Pausa", True, BLANCO)
-        texto_instrucciones = texto_fuente.render("Presiona ESC para continuar", True, BLANCO)
-        
-        ventana.blit(texto_pausa, (ancho // 2 - texto_pausa.get_width() // 2, alto // 2 - 50))
-        ventana.blit(texto_instrucciones, (ancho // 2 - texto_instrucciones.get_width() // 2, alto // 2 + 50))
-        
-        pygame.display.flip()
-
-        for evento in pygame.event.get():
-            if evento.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if evento.type == pygame.KEYDOWN and evento.key == pygame.K_ESCAPE:
-                return
-
-# Función para mostrar texto con fondo
-def mostrar_texto_con_fondo(texto, y=550):
+# Función para mostrar texto
+def mostrar_texto(texto, y=550):
     if texto:
-        # Crear un fondo para el texto (rectángulo negro con transparencia)
-        texto_superficie = fuente.render(texto, True, (255, 255, 255))
-        ancho_texto = texto_superficie.get_width()
-        alto_texto = texto_superficie.get_height()
-
-        # Fondo oscuro para el texto
-        fondo_texto = pygame.Surface((ancho_texto + 20, alto_texto + 10))
-        fondo_texto.set_alpha(200)  # Transparencia en el fondo
-        fondo_texto.fill((0, 0, 0))  # Fondo negro
-
-        # Posicionar el fondo y el texto
-        ventana.blit(fondo_texto, (20 - 10, y - 5))
-        ventana.blit(texto_superficie, (20, y))
-
-# Ajuste para limitar el texto en ancho
-def dividir_texto(texto, max_ancho):
-    palabras = texto.split(" ")
-    lineas = []
-    linea_actual = ""
-
-    for palabra in palabras:
-        if fuente.size(linea_actual + palabra)[0] < max_ancho:
-            linea_actual += palabra + " "
-        else:
-            lineas.append(linea_actual)
-            linea_actual = palabra + " "
-    if linea_actual:
-        lineas.append(linea_actual)
-
-    return lineas
-
-# Función para mostrar texto ajustado
-def mostrar_texto(texto, y=500):
-    if texto:
-        max_ancho = ancho - 40  # Máximo ancho del texto (con un margen de 20 píxeles a cada lado)
-        lineas = dividir_texto(texto, max_ancho)
-        # Mostrar cada línea de texto
-        for i, linea in enumerate(lineas):
-            mostrar_texto_con_fondo(linea, y + (i * 35))
-
-
+        superficie_texto = fuente.render(texto, True, (255, 255, 255))
+        ventana.blit(superficie_texto, (20, y))
 
 # Función para recoger objetos
 def recoger_objeto(objeto):
@@ -251,6 +203,13 @@ def cerca_de_objeto(pos_objeto, umbral=50):
 # Función para comprobar si está cerca de un maniquí
 def cerca_de_maniqui(pos_maniqui, umbral=50):
     return abs(pos_x - pos_maniqui[0]) < umbral and abs(pos_y - pos_maniqui[1]) < umbral
+
+# Variables del personaje
+pos_x = ancho // 2
+pos_y = 385
+velocidad = 2
+sprite_actual = sprite_frente
+habitacion_actual = 1
 
 # Función para comprobar si el juego está completo
 def juego_completado():
